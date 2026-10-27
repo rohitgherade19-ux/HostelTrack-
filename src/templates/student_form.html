@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% macro err(field) %}
+  {% if errors.get(field) %}<div class="invalid-feedback d-block">{{ errors[field] }}</div>{% endif %}
+{% endmacro %}
+
+{% block content %}
+<h3>{% if mode == 'add' %}Add New Student{% else %}Edit Student {{ student_id }}{% endif %}</h3>
+
+<form method="post" class="row g-3 mt-1" novalidate>
+
+  <div class="col-md-4">
+    <label class="form-label">Student ID</label>
+    {% if mode == 'add' %}
+      <input name="student_id" value="{{ values.get('student_id', '') }}"
+             class="form-control {{ 'is-invalid' if errors.get('student_id') }}" required>
+      {{ err('student_id') }}
+    {% else %}
+      <input value="{{ student_id }}" class="form-control" disabled>
+    {% endif %}
+  </div>
+
+  <div class="col-md-8">
+    <label class="form-label">Full name</label>
+    <input name="full_name" value="{{ values.get('full_name', '') }}"
+           class="form-control {{ 'is-invalid' if errors.get('full_name') }}" required>
+    {{ err('full_name') }}
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Gender</label>
+    <select name="gender" class="form-select {{ 'is-invalid' if errors.get('gender') }}">
+      {% for code, label in [('M', 'Male'), ('F', 'Female'), ('O', 'Other')] %}
+        <option value="{{ code }}" {{ 'selected' if values.get('gender') == code }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    {{ err('gender') }}
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Date of birth</label>
+    <input type="date" name="date_of_birth" value="{{ values.get('date_of_birth', '') }}"
+           class="form-control {{ 'is-invalid' if errors.get('date_of_birth') }}" required>
+    {{ err('date_of_birth') }}
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Phone (10 digits)</label>
+    <input name="phone" value="{{ values.get('phone', '') }}" maxlength="10"
+           class="form-control {{ 'is-invalid' if errors.get('phone') }}" required>
+    {{ err('phone') }}
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Admission date</label>
+    <input type="date" name="admission_date" value="{{ values.get('admission_date', '') }}"
+           class="form-control {{ 'is-invalid' if errors.get('admission_date') }}" required>
+    {{ err('admission_date') }}
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Guardian name</label>
+    <input name="guardian_name" value="{{ values.get('guardian_name', '') }}"
+           class="form-control {{ 'is-invalid' if errors.get('guardian_name') }}" required>
+    {{ err('guardian_name') }}
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Guardian phone (10 digits)</label>
+    <input name="guardian_phone" value="{{ values.get('guardian_phone', '') }}" maxlength="10"
+           class="form-control {{ 'is-invalid' if errors.get('guardian_phone') }}" required>
+    {{ err('guardian_phone') }}
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Address</label>
+    <input name="address" value="{{ values.get('address', '') }}"
+           class="form-control {{ 'is-invalid' if errors.get('address') }}" required>
+    {{ err('address') }}
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Course</label>
+    <input name="course" value="{{ values.get('course', '') }}"
+           class="form-control {{ 'is-invalid' if errors.get('course') }}" required>
+    {{ err('course') }}
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Year of study</label>
+    <select name="year_of_study" class="form-select {{ 'is-invalid' if errors.get('year_of_study') }}">
+      {% for y in range(1, 6) %}
+        <option value="{{ y }}" {{ 'selected' if values.get('year_of_study')|string == y|string }}>{{ y }}</option>
+      {% endfor %}
+    </select>
+    {{ err('year_of_study') }}
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Room</label>
+    <select name="room_no" class="form-select {{ 'is-invalid' if errors.get('room_no') }}">
+      {% for r in rooms %}
+        <option value="{{ r[0] }}" {{ 'selected' if values.get('room_no') == r[0] }}>
+          {{ r[0] }} (floor {{ r[1] }}, {{ r[3] }} free)
+        </option>
+      {% endfor %}
+    </select>
+    {{ err('room_no') }}
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">{{ 'Add Student' if mode == 'add' else 'Save Changes' }}</button>
+    <a href="{{ url_for('students') }}" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

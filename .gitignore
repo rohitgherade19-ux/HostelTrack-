@@ -1,0 +1,15 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
+
+# Local config with the real DB password (never commit this)
+src/config.py
+
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store

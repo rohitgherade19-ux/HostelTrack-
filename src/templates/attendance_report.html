@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Attendance Report</h3>
+  <div class="no-print">
+    {% if only_defaulters %}
+      <a href="{{ url_for('attendance_report') }}" class="btn btn-outline-secondary">Show all students</a>
+    {% else %}
+      <a href="{{ url_for('attendance_report', filter='defaulters') }}" class="btn btn-danger">
+        Show defaulters (below {{ limit }}%)
+      </a>
+    {% endif %}
+    <button class="btn btn-outline-primary" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table align-middle mb-0">
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Room</th><th>Days</th>
+        <th>Present</th><th>Absent</th><th>Leave</th><th style="min-width:160px">Attendance %</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      {% set pct = r[7] %}
+      <tr class="{{ 'row-defaulter' if pct is not none and pct < limit }}">
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+        <td>{{ r[3] }}</td>
+        <td>{{ r[4] }}</td>
+        <td>{{ r[5] }}</td>
+        <td>{{ r[6] }}</td>
+        <td>
+          {% if pct is none %}
+            <span class="text-muted">No data</span>
+          {% else %}
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress pct-bar flex-grow-1">
+                <div class="progress-bar {{ 'bg-danger' if pct < limit else 'bg-success' }}"
+                     style="width: {{ pct|float }}%"></div>
+              </div>
+              <strong>{{ pct }}%</strong>
+            </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted">
+        {% if only_defaulters %}No defaulters. Everyone is at or above {{ limit }}%.{% else %}No students found.{% endif %}
+      </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="text-muted mt-2">{{ rows|length }} record(s). Students with no attendance marked yet show "No data".</p>
+{% endblock %}

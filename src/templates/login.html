@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-card">
+  <h3 class="mb-1">Hostel Management</h3>
+  <p class="text-center text-muted mb-4">Warden Login</p>
+  <form method="post">
+    <input name="username" class="form-control mb-2" placeholder="Username" required autofocus>
+    <input name="password" type="password" class="form-control mb-3" placeholder="Password" required>
+    <button class="btn btn-primary w-100">Login</button>
+  </form>
+</div>
+{% endblock %}
